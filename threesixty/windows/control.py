@@ -1,26 +1,8 @@
-import structs
-import ctypes
-from ctypes import wintypes
-
+import xinput
 from .. import icontroller
 from .. import constants
 from .. import events
 
-try:
-    xinput = ctypes.windll.xinput1_3
-except:
-    raise Exception("Unable to detect xinput.dll")
-
-XInputSetState = xinput.XInputSetState
-XInputSetState.argtypes = [ctypes.c_uint, ctypes.POINTER(structs.XINPUT_VIBRATION)]
-XInputSetState.restype = ctypes.c_uint
-
-GetProcAddress = ctypes.windll.kernel32.GetProcAddress
-__XInputGetState_addr = GetProcAddress(xinput._handle, wintypes.LPCSTR(100))
-__XInputGetState_proto = ctypes.WINFUNCTYPE(ctypes.c_uint)
-XInputGetState = __XInputGetState_proto(__XInputGetState_addr)
-XInputGetState.argtypes = [ctypes.c_uint, ctypes.POINTER(structs.XINPUT_STATE)]
-XInputGetState.restype = ctypes.c_uint
 
 class Controller(icontroller.IController):
     def __init__(self,  device):
@@ -63,6 +45,7 @@ class Controller(icontroller.IController):
         return button_config
 
     def __eval_ministick(self, x, y):
+        """Corrects the ministick's position with a dead-zone of 0.25"""
         max_stick_position = 32768.0
         
         x /= max_stick_position
@@ -74,9 +57,36 @@ class Controller(icontroller.IController):
 
         return (x, y)
 
+    def __enumerate_battery(self, battery):
+        """Converts the given battery struct to a human-readable form"""
+        battery_type  = battery.BatteryType
+        battery_level = battery.BatteryLevel
+
+        if battery_type == 0:
+            battery_type = constants.BATTERY_TYPE_DISCONNECTED
+        elif battery_type == 1:
+            battery_type = constants.BATTERY_TYPE_WIRED
+        elif battery_type == 2:
+            battery_type = constants.BATTERY_TYPE_ALKALINE
+        elif battery_type == 3:
+            battery_type = constants.BATTERY_TYPE_NIMH
+        else:
+            battery_type = constants.BATTERY_TYPE_UNKNOWN
+
+        if battery_level == 0:
+            battery_level = constants.BATTERY_LEVEL_EMPTY
+        elif battery_level == 1:
+            battery_level = constants.BATTERY_LEVEL_LOW
+        elif battery_level == 2:
+            battery_level = constants.BATTERY_LEVEL_MEDIUM
+        else: 
+            battery_level = constants.BATTERY_LEVEL_FULL
+
+        return (battery_type, battery_level)
+
     def get(self):
-        state = structs.XINPUT_STATE()
-        error = XInputGetState(self.__device, ctypes.byref(state))
+        error, state = xinput.XInputGetState(self.__device)
+        
 
         if error == 1167:
             raise Exception("Device cannot be found at {%d}"%self.__device)
@@ -90,6 +100,9 @@ class Controller(icontroller.IController):
             data[constants.MSL] = self.__eval_ministick(gamepad.l_thumb_x, gamepad.l_thumb_y)
             data[constants.MSR] = self.__eval_ministick(gamepad.r_thumb_x, gamepad.r_thumb_y)
 
+            battery = xinput.XInputGetBatteryInformation(self.__device, 0)
+            data[constants.BATTERY_TYPE], data[constants.BATTERY_LEVEL] = self.__enumerate_battery(battery)
+
             return data
 
     def on(self, event, action):
@@ -102,5 +115,5 @@ class Controller(icontroller.IController):
         self.eventhandlers[event].append(action)
 
     def vibrate(self, left, right):
-        vibration = structs.XINPUT_VIBRATION(int(left * 65535), int(right * 65535))
-        XInputSetState(self.__device, ctypes.byref(vibration))
+        vibration = xinput.XINPUT_VIBRATION(int(left * 65535), int(right * 65535))
+        xinput.XInputSetState(self.__device, vibration)

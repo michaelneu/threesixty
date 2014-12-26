@@ -13,33 +13,26 @@ python setup.py install
 ## Basic usage
 Using threesixty is indeed quite simple.
 ```python
-import threesixty
-
-controllers = threesixty.controllers()
-
-def a_pressed(controller):
-	print "A pressed"
-	return False
-    
-def b_hold_down(controller):
-	print "B is being pressed"
-    
-if len(controllers) > 0:
-	controller = controllers[0]
-    
-    controller.on(threesixty.A, a_pressed)
-    controller.on(threesixty.B, b_hold_down)
+>>> import threesixty
+>>> controllers = threesixty.controllers()
+>>> len(controllers)
+1
+>>> controller = controllers[0]
+>>> state = controller.get()
+>>> state[threesixty.BATTERY_LEVEL] == threesixty.BATTERY_LEVEL_MEDIUM
+True
 ```
 
-The root directory of the repository contains two simple examples which should explain, how threesixty works. 
+The `examples` directory of the repository contains some simple examples which should explain, how threesixty works. 
 
 ## What threesixty isn't
 - A game engine
 	- threesixty was meant to be used for any application, but not in order to replace a real game engine. It allows you to use a controller, but that's it
 
 - A perfect event handling system
-	- It handles events, but doesn't use any library like [zope.event](https://github.com/zopefoundation/zope.event). threesixty uses a multithreaded callback system to fire its events. 
+	- It handles events, but doesn't use any library like [zope.event]. threesixty uses a multithreaded callback system to fire its events. 
 
 
 
 [jaraco.input]:http://pydoc.net/Python/jaraco.input/1.0.1/jaraco.input.win32.xinput/
+[zope.event]:https://github.com/zopefoundation/zope.event

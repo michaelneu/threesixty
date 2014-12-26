@@ -1,8 +1,5 @@
 import ctypes
 
-# https://github.com/r4dian/Xbox-360-Controller-for-Python/blob/master/xinput.py
-# http://pydoc.net/Python/jaraco.input/1.0.1/jaraco.input.linux2.joystick/
-
 class XINPUT_GAMEPAD(ctypes.Structure):
     _fields_ = [
         ('buttons', ctypes.c_ushort),
@@ -15,11 +12,19 @@ class XINPUT_GAMEPAD(ctypes.Structure):
     ]
 
 class XINPUT_VIBRATION(ctypes.Structure):
-    _fields_ = [("wLeftMotorSpeed", ctypes.c_ushort),
-                ("wRightMotorSpeed", ctypes.c_ushort)]
+    _fields_ = [
+        ("wLeftMotorSpeed", ctypes.c_ushort),
+        ("wRightMotorSpeed", ctypes.c_ushort)
+    ]
 
 class XINPUT_STATE(ctypes.Structure):
     _fields_ = [
         ('packet_number', ctypes.c_ulong),
         ('gamepad', XINPUT_GAMEPAD),
+    ]
+
+class XINPUT_BATTERY_INFORMATION(ctypes.Structure):
+    _fields_ = [
+        ("BatteryType", ctypes.c_byte),
+        ("BatteryLevel", ctypes.c_byte)
     ]
