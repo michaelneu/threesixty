@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="description" content="Threesixty : Simple wrapper for the XBOX 360 controller">
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Threesixty</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/minedev/threesixty">View on GitHub</a>
+
+          <h1 id="project_title">Threesixty</h1>
+          <h2 id="project_tagline">Simple wrapper for the XBOX 360 controller</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/minedev/threesixty/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/minedev/threesixty/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>
+<a id="threesixty" class="anchor" href="#threesixty" aria-hidden="true"><span class="octicon octicon-link"></span></a>threesixty</h1>
+
+<p>First of all, threesixty is based on some parts of <a href="http://pydoc.net/Python/jaraco.input/1.0.1/jaraco.input.win32.xinput/">jaraco.input</a>, that's also, why threesixty is released under the MIT license. Nevertheless this library allows you to create XBOX 360 controller based user-interaction without worrying about how to interact with the controller itself. And it's really simple. </p>
+
+<h2>
+<a id="installation" class="anchor" href="#installation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installation</h2>
+
+<p>threesixty is currently Windows-only. You need to have <code>xinput1_3.dll</code> installed (which should be included in Windows 7/8 by default). Linux support is planned. </p>
+
+<p>After cloning the repository, you can go ahead and install it via</p>
+
+<div class="highlight highlight-sh"><pre>python setup.py install</pre></div>
+
+<h2>
+<a id="basic-usage" class="anchor" href="#basic-usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Basic usage</h2>
+
+<p>Using threesixty is indeed quite simple.</p>
+
+<div class="highlight highlight-python"><pre><span class="pl-k">&gt;&gt;&gt;</span> <span class="pl-k">import</span> threesixty
+<span class="pl-k">&gt;&gt;&gt;</span> controllers <span class="pl-k">=</span> threesixty.controllers()
+<span class="pl-k">&gt;&gt;&gt;</span> <span class="pl-c1">len</span>(controllers)
+<span class="pl-c1">1</span>
+<span class="pl-k">&gt;&gt;&gt;</span> controller <span class="pl-k">=</span> controllers[<span class="pl-c1">0</span>]
+<span class="pl-k">&gt;&gt;&gt;</span> state <span class="pl-k">=</span> controller.get()
+<span class="pl-k">&gt;&gt;&gt;</span> state[threesixty.BATTERY_LEVEL] <span class="pl-k">==</span> threesixty.BATTERY_LEVEL_MEDIUM
+<span class="pl-c1">True</span></pre></div>
+
+<p>The <code>examples</code> directory of the repository contains some simple examples which should explain, how threesixty works. </p>
+
+<h2>
+<a id="what-threesixty-isnt" class="anchor" href="#what-threesixty-isnt" aria-hidden="true"><span class="octicon octicon-link"></span></a>What threesixty isn't</h2>
+
+<ul>
+<li>
+<p>A game engine</p>
+
+<ul>
+<li>threesixty was meant to be used for any application, but not in order to replace a real game engine. It allows you to use a controller, but that's it</li>
+</ul>
+</li>
+<li>
+<p>A perfect event handling system</p>
+
+<ul>
+<li>It handles events, but doesn't use any library like <a href="https://github.com/zopefoundation/zope.event">zope.event</a>. threesixty uses a multithreaded callback system to fire its events. </li>
+</ul>
+</li>
+</ul>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Threesixty maintained by <a href="https://github.com/minedev">minedev</a></p>
+        <p>Published with <a href="https://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
